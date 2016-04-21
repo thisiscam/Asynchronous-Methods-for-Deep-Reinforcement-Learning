@@ -39,13 +39,15 @@ LOSE_REWARD = -1
 SCORE_REWARD = 1
 
 class GameState:
-    def __init__(self):
+    def __init__(self, update_disp=False):
         self.bar1_x, self.bar2_x = 10. , 620.
         self.bar1_y, self.bar2_y = 215., 215.
         self.circle_x, self.circle_y = 307.5, 232.5
         self.bar1_move, self.bar2_move = 0. , 0.
         self.bar1_score, self.bar2_score = 0,0
         self.speed_x, self.speed_y = 7., 7.
+        self.surface = pygame.Surface((640,480))
+        self.update_disp = update_disp
 
     def frame_step(self,input_vect):
         pygame.event.pump()
@@ -64,12 +66,12 @@ class GameState:
         self.score1 = font.render(str(self.bar1_score), True,(255,255,255))
         self.score2 = font.render(str(self.bar2_score), True,(255,255,255))
 
-        screen.blit(background,(0,0))
-        frame = pygame.draw.rect(screen,(255,255,255),Rect((5,5),(630,470)),2)
-        middle_line = pygame.draw.aaline(screen,(255,255,255),(330,5),(330,475))
-        screen.blit(bar1,(self.bar1_x,self.bar1_y))
-        screen.blit(bar2,(self.bar2_x,self.bar2_y))
-        screen.blit(circle,(self.circle_x,self.circle_y))
+        self.surface.blit(background,(0,0))
+        frame = pygame.draw.rect(self.surface,(255,255,255),Rect((5,5),(630,470)),2)
+        middle_line = pygame.draw.aaline(self.surface,(255,255,255),(330,5),(330,475))
+        self.surface.blit(bar1,(self.bar1_x,self.bar1_y))
+        self.surface.blit(bar2,(self.bar2_x,self.bar2_y))
+        self.surface.blit(circle,(self.circle_x,self.circle_y))
 
         self.bar1_y += self.bar1_move
 
@@ -129,13 +131,14 @@ class GameState:
         self.circle_x += self.speed_x
         self.circle_y += self.speed_y
 
-        image_data = pygame.surfarray.array3d(pygame.display.get_surface())
+        image_data = pygame.surfarray.array3d(self.surface)
 
         # I move the score here so the pixels of the numbers do not appear in the image_data
-        screen.blit(self.score1,(250.,210.))
-        screen.blit(self.score2,(380.,210.))
-
-        pygame.display.update()
+        if self.update_disp:
+            self.surface.blit(self.score1,(250.,210.))
+            self.surface.blit(self.score2,(380.,210.))
+            screen.blit(self.surface,(0,0))
+            pygame.display.update()
 
         terminal = False
         if max(self.bar1_score, self.bar2_score) >= 20:

@@ -66,7 +66,7 @@ def createNetwork():
     	
 def playGame(sess):
     # open up a game state to communicate with emulator
-    game_state = game.GameState()
+    game_state = game.GameState(update_disp=True)
 
     score = 0
 
@@ -114,7 +114,8 @@ sess = tf.InteractiveSession()
 if __name__ == "__main__":
     #Restore trained network
     saver = tf.train.Saver()
-    checkpoint = tf.train.get_checkpoint_state("save_networks_asyn")
+    checkpoint = tf.train.get_checkpoint_state("save_networks_asyn/")
+    import pdb; pdb.set_trace()
     if checkpoint and checkpoint.model_checkpoint_path:
         saver.restore(sess, checkpoint.model_checkpoint_path)
         print "Successfully loaded:", checkpoint.model_checkpoint_path
