@@ -3,7 +3,7 @@ import threading
 import tensorflow as tf
 import cv2
 import sys
-sys.path.append("Wrapped Game Code/")
+sys.path.append("Wrapped-Game-Code/")
 import pong_fun as game # Whichever is imported "as game" will be used
 import dummy_game #as game
 import tetris_fun #as game
