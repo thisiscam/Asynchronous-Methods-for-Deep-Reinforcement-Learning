@@ -7,17 +7,22 @@ class Defaults:
     REPEAT_ACTION_PROBABILITY = 0
     NPROCESS = 4
     FRAME_SKIP = 4
-    RESIZE_METHOD = 'crop'
-    MAX_START_NULLOPS = 0
+    RESIZE_METHOD = 'scale'
+    MAX_START_NULLOPS = 30
     RESIZED_WIDTH = 84
     RESIZED_HEIGHT = 84
-    DEATH_ENDS_EPISODE='false'
+    DEATH_ENDS_EPISODE='true'
     UPDATE_DISP = 'true'
-    LEARNING_RATE = .0002
-    DISCOUNT = .95
-    RMS_DECAY = .99 # (Rho)
-    RMS_EPSILON = 1e-6
-    MOMENTUM = 0.0
+    LEARNING_RATE = .00025
+    DISCOUNT = .99
+    RMS_DECAY = .95 # (Rho)
+    RMS_EPSILON = .01
+    MOMENTUM = 0.0 # Note that the "momentum" value mentioned in the Nature
+                 # paper is not used in the same way as a traditional momentum
+                 # term.  It is used to track gradient for the purpose of
+                 # estimating the standard deviation. This package uses
+                 # rho/RMS_DECAY to track both the history of the gradient
+                 # and the squared gradient.
 
 def load_ale(parameters, rng, update_disp=False):
     ale = ale_python_interface.ALEInterface()

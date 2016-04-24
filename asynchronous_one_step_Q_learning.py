@@ -122,7 +122,7 @@ def copyTargetNetwork(sess):
 
 class ActorLearner(object):
     CROP_OFFSET = 8
-    def __init__(self, thread_id, target, parameters, lock, barrier):
+    def __init__(self, thread_id, target, parameters, lock, barrier, testing=False):
         self.lock = lock
         self.barrier = barrier
         self.thread_id = thread_id
@@ -145,6 +145,7 @@ class ActorLearner(object):
         self.thread_id = thread_id
         self.terminal_lol = False # Most recent episode ended on a loss of life
         self.save_file_name =CHECKPOINT_DIR + "/t-{0}-checkpoint.save".format(thread_id)
+        self.testing = testing
 
     def init_episode(self):
         """ This method resets the game if needed, performs enough null
@@ -178,7 +179,7 @@ class ActorLearner(object):
         reward = 0
         for _ in range(self.frame_skip):
             reward += self.act(action_idx)
-        self.terminal_lol = (self.death_ends_episode and not testing and
+        self.terminal_lol = (self.death_ends_episode and not self.testing and
                                  self.ale.lives() < self.start_lives)
         terminal = self.ale.game_over() or self.terminal_lol
         return reward, terminal
@@ -282,6 +283,7 @@ class ActorLearner(object):
         y_batch = []
 
         self.init_episode()
+        self.start_lives = self.ale.lives()
         x_t = self.get_observation()
         s_t = np.stack((x_t, x_t, x_t, x_t), axis = 2)
         aux_s = s_t
