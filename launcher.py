@@ -1,5 +1,4 @@
 import ale_python_interface
-import pygame
 import argparse
 
 class Defaults:
